@@ -254,16 +254,31 @@ function findMedia(data, isRegex = false, filter = false, timer = false) {
         chrome.runtime.sendMessage({ Message: "popupAddData", data: info }, function () {
             if (G.featAutoDownTabId.size > 0 && G.featAutoDownTabId.has(info.tabId) && chrome.downloads?.State) {
                 try {
-                    const downDir = info.title == "NULL" ? "CatCatch/" : stringModify(info.title) + "/";
-                    let fileName = isEmpty(info.name) ? stringModify(info.title) + '.' + info.ext : decodeURIComponent(stringModify(info.name));
-                    if (G.TitleName) {
-                        fileName = filterFileName(templates(G.downFileName, info));
-                    } else {
-                        fileName = downDir + fileName;
+                    // 标题预处理 - 与 popup.js 保持一致
+                    let _title = info.title || "NULL";
+                    if (_title && typeof _title === 'string') {
+                        _title = _title.replace(/\s*[-_—|]\s*(小红书|Bilibili|哔哩哔哩|bilibili|YouTube|优酷|爱奇艺|腾讯视频|抖音|微博|知乎|百度|Google|GitHub|淘宝|京东)\w*$/i, '').trim();
+                        if (!_title) _title = info.title;
                     }
+
+                    // 文件名生成逻辑 - 与 popup.js 第 71-76 行保持一致
+                    let fileName;
+                    if (G.TitleName && !isEmpty(_title)) {
+                        fileName = _title + '.' + (info.ext || '');
+                    } else {
+                        fileName = isEmpty(info.name) ? _title + '.' + info.ext : decodeURIComponent(stringModify(info.name));
+                    }
+
+                    // 下载文件名处理 - 与 popup.js 第 86-90 行保持一致
+                    let downFileName = G.TitleName ? templates(G.downFileName, { ...info, title: stringModify(_title), name: fileName }) : fileName;
+                    downFileName = filterFileName(downFileName);
+                    if (isEmpty(downFileName)) {
+                        downFileName = fileName;
+                    }
+
                     chrome.downloads.download({
                         url: info.url,
-                        filename: fileName
+                        filename: downFileName
                     });
                 } catch (e) { return; }
             }

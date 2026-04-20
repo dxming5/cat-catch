@@ -59,7 +59,13 @@ function AddMedia(data, currentTab = true) {
     data._title = data.title;
     data.title = stringModify(data.title);
     //文件名
-    data.name = isEmpty(data.name) ? data.title + '.' + data.ext : decodeURIComponent(stringModify(data.name));
+    // 文件名 - 支持TitleName控制显示名称
+    if (G.TitleName && !isEmpty(data._title)) {
+        // 当开启了"使用自定义文件名"时，显示名称也使用网页标题
+        data.name = data._title + '.' + (data.ext || '');
+    } else {
+        data.name = isEmpty(data.name) ? data._title + '.' + data.ext : decodeURIComponent(stringModify(data.name));
+    }
     //截取文件名长度
     let trimName = data.name;
     if (data.name && data.name.length >= 50 && !_tabId) {

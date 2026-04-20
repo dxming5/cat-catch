@@ -53,7 +53,7 @@ G.deepSearchTemporarilyClose = null; // 深度搜索临时变量
 
 // 避免抓取列表
 G.damnUrl = [
-    /^https:\/\/.*\.douyin\.com\/.*$/i,
+    //^https:\/\/.*\.douyin\.com\/.*$/i,
 ];
 G.damnUrlSet = new Set();
 
@@ -122,7 +122,7 @@ G.OptionLists = {
         { "type": "ig", "regex": "(^https://scontent[a-z0-9-]*\\.cdninstagram\\.com/.*)&bytestart=.*", "ext": "", "blackList": false, "state": false },
         { "type": "ig", "regex": "(^https://.*\\.fbcdn\\.net/.*)&bytestart=.*", "ext": "", "blackList": false, "state": false },
     ],
-    TitleName: false,
+    TitleName: true,
     Player: "",
     ShowWebIco: !G.isMobile,
     MobileUserAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
@@ -133,7 +133,7 @@ G.OptionLists = {
     copyM3U8: "${url}",
     copyMPD: "${url}",
     copyOther: "${url}",
-    autoClearMode: 1,
+    autoClearMode: 2,
     catDownload: false,
     saveAs: false,
     userAgent: "",

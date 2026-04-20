@@ -57,6 +57,14 @@ let checkboxState = true;
 // 生成资源DOM
 function AddMedia(data, currentTab = true) {
     data._title = data.title;
+    // ===== 新增：自动清理 " - 网站名" 后缀 =====
+    if (data._title && typeof data._title === 'string') {
+        // 匹配常见的 " - 网站名" 模式并删除
+        data._title = data._title.replace(/\s*[-_—|]\s*(小红书|Bilibili|哔哩哔哩|bilibili|YouTube|优酷|爱奇艺|腾讯视频|抖音|微博|知乎|百度|Google|GitHub|淘宝|京东)\w*$/i, '').trim();
+        // 如果标题为空，恢复原标题
+        if (!data._title) data._title = data.title;
+    }
+    // ===== 结束新增 =====
     data.title = stringModify(data.title);
     //文件名
     // 文件名 - 支持TitleName控制显示名称
